@@ -1,0 +1,130 @@
+openapi: 3.0.2
+info:
+  version: 2.0.0
+  title: Servicio usuarios
+  description: Consulta la informacion basica de un usuario.
+
+servers: 
+  - url: http://localhost:8090/api/v1
+paths:
+  '/user':
+    get:
+      summary: 'Consulta la informacion de un usuario'
+      description: "Permita consultar la informacion basica de un usuario."
+      tags:
+        - User
+      parameters: 
+        - $ref: '#/components/parameters/documentType'
+        - $ref: '#/components/parameters/documentNumber'
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bodyResponse'
+        '400':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400Response'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Response'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500Response'
+                
+
+components:
+
+  schemas:
+
+    400Response:
+      description: Objeto de respuesta frente a errores de servicio.
+      type: object
+      properties:
+        message: 
+          type: string
+          example: El valor del campo documentType`tiene que estar entre (C y P).
+        status: 
+          type: string
+          example: BAD_REQUEST
+
+    404Response:
+      description: Objeto de respuesta frente a errores de servicio.
+      type: object
+      properties:
+        message: 
+          type: string
+          example: 'No existe el usuario.'
+        status: 
+          type: string
+          example: 'NOT_FOUND'
+          
+    500Response:
+      description: Objeto de respuesta frente a errores de servicio.
+      type: object
+      properties:
+        code:
+          type: string
+          example: '500'
+          description: 'Internal Eerver Error'
+        message:
+          type: string
+          minLength: 0
+          maxLength: 150
+          example: 'Internal Server Error'
+          description: 'Mensaje legible que representa el estado del resultado del servicio'
+
+
+    bodyResponse: 
+      type: object
+      properties:
+        firstName: 
+          type: string
+          example: Brayan
+        secondName: 
+          type: string
+          example: Fabian
+        firstLastName: 
+          type: string
+          example: Vargas
+        secondLastName: 
+          type: string
+          example: Bermudez
+        phone: 
+          type: string
+          example: 3144020583
+        address: 
+          type: string
+          example: Calle falsa 123
+        residenceCity: 
+          type: string
+          example: Soacha
+
+  parameters:
+    documentType:
+      in: header
+      name: documentType
+      required: true
+      schema:
+        type: string
+      description: 'Tipo de documento.'
+      example: 'C'
+    documentNumber:
+      in: header
+      name: documentNumber
+      required: true
+      schema:
+        type: string
+      description: 'Numero de documento de identidad.'
+      example: '23445323'
